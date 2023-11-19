@@ -5,9 +5,7 @@ from utils.classes import Node
 
 def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_idxs: list[int]) -> float:
     """
-    THIS FUNCTION IS NOT USED AND **MIGHT** NOT BE WORKING!
-
-    A method to calculate total cost is given.
+    A method to calculate total cost of given set medians.
     
     @arguments
     problem_definition: list[Node] - the problem definition
@@ -17,6 +15,7 @@ def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_
     @returns
     cost: float - the total cost of choosing the given medians
     """
+    visited_median_idxs = []
     for median_idx in median_idxs:
         median = problem_definiton[median_idx]
         dist_arr = np.zeros(shape=(node_count,))
@@ -29,7 +28,13 @@ def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_
             dist_arr[i] = np.linalg.norm(node.point.asnumpy() - median.point.asnumpy())
             i += 1
         
+        # Distance to Visited Medians Must not be considered#
+        for i in visited_median_idxs:
+            dist_arr[i] = 0
+
+        #print(f'{median_idx=},{visited_median_idxs=},{dist_arr=}')
         cost = np.sum(dist_arr) + facility_cost_of_median
+        visited_median_idxs.append(median_idx)
 
     return cost
 
@@ -89,8 +94,8 @@ def greedy_solver(problem_definition: list[Node], node_count: int, p: int = 1) -
             # node_idx is the index that I am currently considering as a median(s)
             candidate_positions_for_medians = best_median_idxs.copy() + [node_idx]
 
-            cost = compute_better_cost(
-                problem_definition, candidate_positions_for_medians
+            cost = calculate_total_cost(
+                problem_definition, node_count, candidate_positions_for_medians
             )
 
             if cost < best_cost:
@@ -103,5 +108,6 @@ def greedy_solver(problem_definition: list[Node], node_count: int, p: int = 1) -
         remaining_point_idxs = np.delete(
             remaining_point_idxs, np.where(remaining_point_idxs == best_median_idx)
         )
+        #print(remaining_point_idxs)
 
     return best_median_idxs
