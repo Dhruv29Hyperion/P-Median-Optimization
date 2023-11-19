@@ -74,33 +74,53 @@ def greedy_solver_B(distance_matrix, node_count: int, cost_array, production_arr
 
     return best_median_idxs
 
-def compute_better_cost(distance_matrix, node_count, matrix_idxs) -> float:
+def compute_better_cost(distance_matrix, node_count, median_idxs, cost_array, production_array, demand_array) -> float:
     """
     A method to calculate total cost is given.
     
     @arguments
     problem_definition: list[Node] - the problem definition
+    node_count: int - the number of nodes.
     medians_idxs: list[int] - the indexes of the medians for which we want to calculate the total cost
 
     @returns
     cost: float - the total cost of choosing the given medians
     """
 
-    cost = 0
-    X = np.zeros(shape(distance_matrix))
+    # Generating X Matrix based on minimum distance
+    X = np.zeros((node_count,node_count))
     for i in range(node_count):
+        # If i is already a median, skip #
+        if i in median_idxs:
+            continue
+
+        # Initializing Minimum Distance and Best Median
         mindist = float("inf")
         best_median = None
+
+        # Iterating though Medians to find Closest Median
         for median in median_idxs:
             dist =  distance_matrix[median][i]
-            if dist < mindist:
+            if dist < mindist and median != i:
                 mindist = dist
-                best_median = i
-        X[best_median][i] = 1
+                best_median = median 
 
-    cost += sum([problem_definition[median].cost for median in median_idxs])
+        # Assigning Node to Closest Median
+        X[best_median,i] = 1
 
-    return cost
+    # Finding Facility Cost
+    facility_cost = 0
+    for median in median_idxs:
+        median_demand = np.dot(demand_array,X[median]) + demand_array[median]
+        facility_area = median_demand/production_array[median]
+        facility_cost += facility_area*cost_array[median]
+    
+    # To find Delivery Cost #
+    delivery_cost = 0
+    for i in range(node_count):
+        delivery_cost += np.dot(X[median],distance_matrix[median])
+
+    return delivery_cost+facility_cost 
 
 def variantB(distance_matrix, node_count: int, cost_array, production_array, demand_array) -> list[int]:
     """
@@ -132,26 +152,43 @@ def variantB(distance_matrix, node_count: int, cost_array, production_array, dem
                 demand_array, 
                 p
         )
-        print(f'{p=},{selected_medians=}')
- 
-    return best_medians
+        #print(f'{p=},{selected_medians=}')
+        if selected_medians is not None:
+            total_cost = compute_better_cost(
+                            distance_matrix, 
+                            node_count,
+                            selected_medians,
+                            cost_array,
+                            production_array,
+                            demand_array
+                        )
+            if total_cost < best_cost:
+                best_cost = total_cost
+                best_medians = selected_medians
+        else:
+            print(f"\tUnable to find a solution for {p=}")
+
+    return best_medians, best_cost
 
 
 if __name__ == '__main__':
     
     # Distance Matrix
-    dist_mat = np.array([[0,1000,3],[1000,0,4],[3,4,0]])
+    dist_mat = np.array([[0,10,3],[10,0,4],[3,4,0]])
 
     # Number of Customers
     node_count = len(dist_mat)
 
     # Cost of median per Unit Area
-    C = np.array([0,0,0])
+    C = np.array([10,5,7])
 
     # Production per Unit Area
-    P = np.array([10000,1000,10000])
+    P = np.array([10,10,10])
 
     # Demand of Customer
-    W = np.array([1,1,1])
+    W = np.array([1,1,15])
 
-    print(variantB(dist_mat,node_count,C,P,W))
+    selected_median_indexes, cost_incurred = variantB(dist_mat,node_count,C,P,W)
+
+    print(f"Best Medians: {selected_median_indexes}")
+    print(f"Cost: {cost_incurred}") # print the cost
