@@ -1,3 +1,5 @@
+# >> IGNORE THIS FILE FOR NOW << #
+
 # define variables
 
 # number of customers (N) is the DEMAND points
