@@ -16,6 +16,7 @@ def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_
     cost: float - the total cost of choosing the given medians
     """
     visited_median_idxs = []
+    cost = 0
     for median_idx in median_idxs:
         median = problem_definiton[median_idx]
         dist_arr = np.zeros(shape=(node_count,))
@@ -33,7 +34,7 @@ def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_
             dist_arr[i] = 0
 
         #print(f'{median_idx=},{visited_median_idxs=},{dist_arr=}')
-        cost = np.sum(dist_arr) + facility_cost_of_median
+        cost += np.sum(dist_arr) + facility_cost_of_median
         visited_median_idxs.append(median_idx)
 
     return cost
