@@ -40,7 +40,6 @@
     distance_cost=8
     
     total_cost=17.1
-
 # p=2 #
  
 ## Greedy Cost for [3,0] ##
@@ -110,7 +109,6 @@
     median_cost=11.428571428571429
     total_distance=7
     cost=52.52857142857143
-
 ## Greedy Cost for [3,0,2] ##
     median_idx=3
     median_cost=9.1
@@ -128,7 +126,6 @@
     cost=51.1
  
     Selected Medians: [3,0,2]
-
 ## Calculating Cost of [3,0,2] ##
     median=3
     median_demand=30.0
@@ -149,10 +146,8 @@
     distance_cost=2
  
     total_cost=14.45
-
 # p=4 #
     Selected Medians: [0,1,2,3]
-
 ## Calculating Cost of [0,1,2,3] ##
     median=0
     median_demand=10.0
@@ -178,24 +173,18 @@
     delivery_cost=0
  
     total_cost=14.635714285714284
-
 ## Summary ##
 p=1
     selected_medians=[3]
     total_cost=17.1
-
 p=2
     selected_medians=[3, 0]
     total_cost=14.7
-
 p=3
     selected_medians=[3, 0, 2]
     total_cost=14.45
-
 p=4
     selected_medians=[0, 1, 2, 3]
     total_cost=14.635714285714284
-
 **Best Medians: [3, 0, 2]**
-
 **Cost: 14.45**
