@@ -186,5 +186,6 @@ p=3
 p=4
     selected_medians=[0, 1, 2, 3]
     total_cost=14.635714285714284
+  
 **Best Medians: [3, 0, 2]**
 **Cost: 14.45**
