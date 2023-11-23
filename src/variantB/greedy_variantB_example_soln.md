@@ -1,3 +1,4 @@
+# Example Problem: Variant-B : Greedy Algorithm #
 # p=1 #
  
 ## Greedy Cost for [0] ##
@@ -150,8 +151,7 @@
     total_cost=14.45
 
 # p=4 #
-
-Selected Medians: [0,1,2,3]
+    Selected Medians: [0,1,2,3]
 
 ## Calculating Cost of [0,1,2,3] ##
     median=0
@@ -197,4 +197,5 @@ p=4
     total_cost=14.635714285714284
 
 **Best Medians: [3, 0, 2]**
+
 **Cost: 14.45**
