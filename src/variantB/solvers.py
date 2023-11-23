@@ -20,23 +20,24 @@ def calculate_total_cost(median_idxs, distance_matrix, node_count: int, cost_arr
     visited_median_idxs = []
     cost = 0
     total_demand = np.sum(demand_array)
+    #print(f'{median_idxs=}')
     for median_idx in median_idxs:
-
         # Calculating Distance of Median to Remaining Nodes #
         total_distance = 0
+        median_cost = 1
         for i in range(node_count):
             if i not in visited_median_idxs:
                 total_distance += distance_matrix[median_idx,i]
-
-        #print(f'{total_distance=}')
-        # median Cost #
-        for i in range(node_count):
-            # Dividing Demand to be Fulfilled by Production per unit area #
-            area = total_demand/production_array[i]
-            median_cost = area*cost_array[i]
+                # Dividing Demand to be Fulfilled by Production per unit area #
+        area = total_demand/production_array[median_idx]
+        median_cost = area*cost_array[median_idx]
+        print(f'\t{median_idx=}')
+        print(f'\t\t{median_cost=}')
+        print(f'\t\t{total_distance=}')
         
         # Adding Cost of median to Total Cost #
         cost += median_cost + total_distance
+        print(f'\t{cost=}')
 
         # Removing Demand of Median from Total_Demand #
         total_demand -= demand_array[median_idx]
@@ -143,17 +144,20 @@ def compute_better_cost(distance_matrix, node_count, median_idxs, cost_array, pr
         # Assigning Node to Closest Median
         X[best_median,i] = 1
 
+    print(f'\t{X=}')
     # Finding Facility Cost
     facility_cost = 0
+    delivery_cost = 0
     for median in median_idxs:
         median_demand = np.dot(demand_array,X[median]) + demand_array[median]
+        print(f'\t\t{median=}')
+        print(f'\t\t{median_demand=}')
         facility_area = median_demand/production_array[median]
+        print(f'\t\t{facility_area=},{cost_array[median]=}')
         facility_cost += facility_area*cost_array[median]
-    
-    # To find Delivery Cost #
-    delivery_cost = 0
-    for i in range(node_count):
         delivery_cost += np.dot(X[median],distance_matrix[median])
+
+    print(f'\t{facility_cost=}')
 
     return delivery_cost+facility_cost 
 

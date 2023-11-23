@@ -23,6 +23,7 @@ def variantB(distance_matrix, node_count: int, cost_array, production_array, dem
     best_medians = []
 
     for p in range(1, node_count + 1):
+        print(f'{p=}')
         selected_medians = greedy_solver_B(
                 distance_matrix, 
                 node_count, 
@@ -40,7 +41,7 @@ def variantB(distance_matrix, node_count: int, cost_array, production_array, dem
                             production_array,
                             demand_array
                         )
-            #print(f'{p=},{selected_medians=},{total_cost=}')
+            print(f'{p=},{selected_medians=},{total_cost=}')
             if total_cost < best_cost:
                 best_cost = total_cost
                 best_medians = selected_medians
@@ -53,19 +54,23 @@ def variantB(distance_matrix, node_count: int, cost_array, production_array, dem
 if __name__ == '__main__':
     
     # Distance Matrix
-    dist_mat = np.array([[0,3,3],[2,0,4],[3,4,0]])
+    #dist_mat = np.array([[0,3,3],[2,0,4],[3,4,0]])
+    dist_mat = np.array([[0,3,4,3],[3,0,7,2],[4,7,0,3],[3,2,3,0]])
 
     # Number of Customers
     node_count = len(dist_mat)
 
     # Cost of median per Unit Area
-    C = np.array([10,50,70])
+    #C = np.array([10,50,70])
+    C = np.array([1,2,1.5,0.7])
 
     # Production per Unit Area
-    P = np.array([100,100,100])
+    #P = np.array([100,100,100])
+    P = np.array([5,7,6,5])
 
     # Demand of Customer
-    W = np.array([20,10,15])
+    #W = np.array([20,10,15])
+    W = np.array([10,15,25,15])
 
     selected_median_indexes, cost_incurred = variantB(dist_mat,node_count,C,P,W)
 
