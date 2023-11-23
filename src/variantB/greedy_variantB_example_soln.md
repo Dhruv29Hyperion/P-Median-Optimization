@@ -175,17 +175,25 @@
     total_cost=14.635714285714284
 ## Summary ##
 p=1
+
     selected_medians=[3]
     total_cost=17.1
+ 
 p=2
+
     selected_medians=[3, 0]
     total_cost=14.7
+
 p=3
+    
     selected_medians=[3, 0, 2]
     total_cost=14.45
+
 p=4
+
     selected_medians=[0, 1, 2, 3]
     total_cost=14.635714285714284
   
 **Best Medians: [3, 0, 2]**
+
 **Cost: 14.45**
