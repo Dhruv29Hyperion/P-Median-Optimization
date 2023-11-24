@@ -1,6 +1,7 @@
 import numpy as np
 from itertools import combinations
-from datetime import  datetime
+from tqdm import tqdm
+from datetime import datetime
 
 
 def tietz_and_bart(D, H, p):
@@ -12,6 +13,7 @@ def tietz_and_bart(D, H, p):
 
     print(f"{R=}")
     print(f"{V1=}\n")
+    print(f"{V=}\n")
 
     PREV_COST = 0
     COST = 0
@@ -72,7 +74,7 @@ def tietz_and_bart(D, H, p):
 
                 print(f"{V1copy=}")
                 SUBR = R[:, V1copy]
-                # print(f"{SUBR=}\n")
+                print(f"{SUBR=}\n")
 
                 DELTA_BJ = 0
                 i = 0
@@ -137,6 +139,45 @@ def tietz_and_bart(D, H, p):
     return V1, COST, cycle_count
 
 
+def enumeration_solver(D, H, p):
+    V = np.arange(D.shape[0])
+    Vcoms = combinations(np.arange(D.shape[0]), p)
+    R = H @ D
+    MIN_COST = np.inf
+    c = 0
+    for Vchoice in tqdm(Vcoms, desc="Processing", unit="item"):
+        P1JS = []
+        for jvertex in Vchoice:
+            # for every v_{j} \belongs V1
+            P1J = []
+            for ivertex in V:
+                # append it if ALL distances from i to j are smaller than from i to k.
+                dist_from_ivertex_to_jvertex = R[ivertex, jvertex]
+                for kvertex in Vchoice:
+                    dist_from_ivertex_to_kvertex = R[ivertex, kvertex]
+                    if dist_from_ivertex_to_jvertex > dist_from_ivertex_to_kvertex:
+                        break
+                else:
+                    P1J.append(ivertex)
+                # do not append because we got breaked
+
+            P1JS.append(P1J)
+        c += 1
+
+        COST = 0
+        for j in np.arange(len(Vchoice)):
+            for i in P1JS[j]:
+                jvertex = Vchoice[j]
+                COST += R[i, jvertex]
+
+        if COST < MIN_COST:
+            MIN_COST = COST
+            MIN_V = Vchoice
+            print(P1JS)
+
+    return MIN_V, MIN_COST, c
+
+
 if __name__ == "__main__":
     np.random.seed(10)
 
@@ -168,16 +209,9 @@ if __name__ == "__main__":
         ],
     )
 
-    # H = np.eye(50)
-
-
-    print("== INPUTS ==")
-    print(D)
-    print(H)
-    print("Calculating for p = 3")
-
-    print("== TEITZ AND BART (VERTEX SUB.) SOLVER ==")
-
+    # shwo progress bar
     st = datetime.now()
-    print(tietz_and_bart(D, H, p=3))
+    print(enumeration_solver(D, H, p=3))
     print(f"Time taken: {(datetime.now() - st).microseconds} mis ")
+
+    
