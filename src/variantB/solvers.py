@@ -118,6 +118,14 @@ def compute_better_cost(distance_matrix, node_count, median_idxs, cost_array, pr
     cost: float - the total cost of choosing the given medians
     """
 
+    # Generating Delivery Weight Matrix #
+    delivery_weight = np.zeros((node_count,node_count))
+    for node in range(node_count):
+        for median in range(node_count):
+            delivery_weight[node,median] =  (demand_array[node]/production_array[median])*cost_array[median]
+
+    weighted_distance_matrix = np.matmul(delivery_weight,distance_matrix)
+
     # Generating X Matrix based on minimum distance
     X = np.zeros((node_count,node_count))
     for i in range(node_count):
@@ -131,7 +139,7 @@ def compute_better_cost(distance_matrix, node_count, median_idxs, cost_array, pr
 
         # Iterating though Medians to find Closest Median
         for median in median_idxs:
-            dist =  distance_matrix[median][i]
+            dist =  weighted_distance_matrix[median][i]
             if dist < mindist and median != i:
                 mindist = dist
                 best_median = median 
