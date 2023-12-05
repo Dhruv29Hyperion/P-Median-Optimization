@@ -1,9 +1,7 @@
 import numpy as np
+import itertools
 
-from utils.classes import Node
-
-
-def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_idxs: list[int]) -> float:
+def calculate_total_cost(distance_matrix, cost_array, node_count: int, median_idxs: list[int]) -> float:
     """
     A method to calculate total cost of given set medians.
     
@@ -18,17 +16,12 @@ def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_
     visited_median_idxs = []
     cost = 0
     for median_idx in median_idxs:
-        median = problem_definiton[median_idx]
-        dist_arr = np.zeros(shape=(node_count,))
+
+        dist_arr = distance_matrix[:,median_idx]
 
         # distances of MEDIAN to all points as below
-        facility_cost_of_median = median.cost
+        facility_cost_of_median = cost_array[median_idx]
 
-        i = 0
-        for node in problem_definiton:
-            dist_arr[i] = np.linalg.norm(node.point.asnumpy() - median.point.asnumpy())
-            i += 1
-        
         # Distance to Visited Medians Must not be considered#
         for i in visited_median_idxs:
             dist_arr[i] = 0
@@ -39,8 +32,7 @@ def calculate_total_cost(problem_definiton: list[Node], node_count: int, median_
 
     return cost
 
-
-def compute_better_cost(problem_definition: list[Node], median_idxs: list[int]) -> float:
+def compute_better_cost(distance_matrix, cost_array, node_count, median_idxs: list[int]) -> float:
     """
     A method to calculate total cost is given.
     
@@ -53,21 +45,19 @@ def compute_better_cost(problem_definition: list[Node], median_idxs: list[int]) 
     """
 
     cost = 0
-    for point in problem_definition:
+    for point in range(node_count):
         mindist = float("inf")
         for median in median_idxs:
-            median = problem_definition[median]
-            dist = np.linalg.norm(point.point.asnumpy() - median.point.asnumpy())
+            dist = distance_matrix[point,median]
             if dist < mindist:
                 mindist = dist
         cost += mindist
 
-    cost += sum([problem_definition[median].cost for median in median_idxs])
-
+    cost += sum([cost_array[median] for median in median_idxs])
     return cost
 
 
-def greedy_solver(problem_definition: list[Node], node_count: int, p: int = 1) -> list[int]:
+def greedy_solver(distance_matrix,cost_array, node_count: int, p: int = 1) -> list[int]:
     """
     Greedy heuristic system for the p-median problem.
     Returns the "indexes" of the best p medians.
@@ -96,7 +86,10 @@ def greedy_solver(problem_definition: list[Node], node_count: int, p: int = 1) -
             candidate_positions_for_medians = best_median_idxs.copy() + [node_idx]
 
             cost = calculate_total_cost(
-                problem_definition, node_count, candidate_positions_for_medians
+                distance_matrix, 
+                cost_array, 
+                node_count, 
+                candidate_positions_for_medians
             )
 
             if cost < best_cost:
@@ -110,5 +103,40 @@ def greedy_solver(problem_definition: list[Node], node_count: int, p: int = 1) -
             remaining_point_idxs, np.where(remaining_point_idxs == best_median_idx)
         )
         #print(remaining_point_idxs)
+
+    return best_median_idxs
+
+def enumerate_solver(distance_matrix, cost_array, node_count: int, p: int = 1) -> list[int]:
+    """
+    Enumeration method for the p-median problem.
+    Returns the "indexes" of the best p medians.
+
+    @arguments
+    problem_definition: list[Node] - a list of nodes representing the problem.
+    node_count: int - the number of nodes.
+    p: int - the number of medians to select.
+
+    @returns
+    best_median_idxs: list[int] - a list of indexes of the best (selected) medians.
+    """
+
+    if p >= node_count:
+        return list(range(node_count))  # select all
+
+    best_cost = float("inf")
+    best_median_idxs = []
+
+    # Enumerate all possible combinations of p medians
+    for candidate_median_idxs in itertools.combinations(range(node_count), p):
+        cost = compute_better_cost(
+            distance_matrix, 
+            cost_array,
+            node_count, 
+            list(candidate_median_idxs)
+        )
+
+        if cost < best_cost:
+            best_cost = cost
+            best_median_idxs = list(candidate_median_idxs)
 
     return best_median_idxs
