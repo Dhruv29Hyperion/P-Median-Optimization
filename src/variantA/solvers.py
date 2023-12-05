@@ -3,10 +3,12 @@ import itertools
 
 def calculate_total_cost(distance_matrix, cost_array, node_count: int, median_idxs: list[int]) -> float:
     """
-    A method to calculate total cost of given set medians.
+    A method to calculate total cost of given set medians using greedy's
+    algorithm.
     
     @arguments
-    problem_definition: list[Node] - the problem definition
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
     node_count: int - the number of Nodes
     median_idxs: list[int] - the indexes of the medians for which we want to calculate the total cost
 
@@ -37,7 +39,8 @@ def compute_better_cost(distance_matrix, cost_array, node_count, median_idxs: li
     A method to calculate total cost is given.
     
     @arguments
-    problem_definition: list[Node] - the problem definition
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
     medians_idxs: list[int] - the indexes of the medians for which we want to calculate the total cost
 
     @returns
@@ -63,7 +66,8 @@ def greedy_solver(distance_matrix,cost_array, node_count: int, p: int = 1) -> li
     Returns the "indexes" of the best p medians.
 
     @arguments
-    problem_definition: list[Node] - a list of nodes representing the problem.
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
     node_count: int - the number of nodes.
     p: int - the number of medians to select.
 
@@ -112,7 +116,8 @@ def enumerate_solver(distance_matrix, cost_array, node_count: int, p: int = 1) -
     Returns the "indexes" of the best p medians.
 
     @arguments
-    problem_definition: list[Node] - a list of nodes representing the problem.
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
     node_count: int - the number of nodes.
     p: int - the number of medians to select.
 

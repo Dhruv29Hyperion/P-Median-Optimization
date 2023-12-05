@@ -1,5 +1,6 @@
 import numpy as np
 from solvers import greedy_solver, enumerate_solver, compute_better_cost
+import random, copy
 
 def variantA_enumerate(distance_matrix, cost_array, node_count: int) -> tuple[list[int], float]:
     """
@@ -7,7 +8,8 @@ def variantA_enumerate(distance_matrix, cost_array, node_count: int) -> tuple[li
     to find the best one. This is a brute-force approach.
 
     @arguments
-    problem_definition: list[Node] - a list of nodes representing the problem.
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
     node_count: int - the number of nodes.
 
     @returns 
@@ -51,7 +53,8 @@ def variantA_greedy(distance_matrix, cost_array, node_count: int) -> tuple[list[
     to find the best one. This is a brute-force approach.
 
     @arguments
-    problem_definition: list[Node] - a list of nodes representing the problem.
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
     node_count: int - the number of nodes.
 
     @returns 
@@ -89,7 +92,56 @@ def variantA_greedy(distance_matrix, cost_array, node_count: int) -> tuple[list[
 
     return best_medians, best_cost
 
+def compare_heuristics(distances,costs,nodes):
+    """
+    A function to compare greedy's algorithm and enumeration for the same input.
+
+    @arguments
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
+    node_count: int - the number of nodes.
+
+    @returns 
+    Nothing
+    """
+
+    distance_matrix = copy.deepcopy(distances)
+    cost_array = copy.deepcopy(costs)
+    node_count = copy.deepcopy(nodes)
+    selected_median_indexes_greedy, cost_incurred_greedy = variantA_greedy(
+            distance_matrix,
+            cost_array, 
+            node_count
+            )
+    print('Greedy: ')
+    print(f"Best Medians: {selected_median_indexes_greedy}")
+    print(f"Cost: {cost_incurred_greedy}") # print the cost
+
+    distance_matrix = copy.deepcopy(distances)
+    cost_array = copy.deepcopy(costs)
+    node_count = copy.deepcopy(nodes)
+    selected_median_indexes_enumerate, cost_incurred_enumerate= variantA_enumerate(
+            distance_matrix,
+            cost_array, 
+            node_count
+            )
+
+    print('\n\nEnumerate: ')
+    print(f"Best Medians: {selected_median_indexes_enumerate}")
+    print(f"Cost: {cost_incurred_enumerate}\n\n") # print the cost
+
 def nandini_parlor_attributes():
+    """
+    A function that generates the attributes for the selected real world problem.
+
+    @arguments
+    None
+
+    @returns 
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
+    node_count: int - the number of nodes.
+    """
     Dij = np.array([
             [0.00,4.76,5.48,8.4,7.64,10.20,4.11,3.71,5.12,4.21],
             [4.76,0.00,1.23,5.08,5.50,11.3,4.89,2.45,3.99,4.27],
@@ -108,6 +160,17 @@ def nandini_parlor_attributes():
     return D_cost, C, node_count
 
 def generate_random_inputs(n):
+    """
+    A function that generates the random attributes for a Variant A problem.
+
+    @arguments
+    node_count: int - the number of nodes.
+
+    @returns 
+    distance_matrix - distances from node i to node j
+    cost_array - cost per unit area for each median
+    """
+
     # Generating a random symmetric matrix
     matrix = np.random.rand(n,n)
     distance_matrix = (matrix + matrix.T) / 2  # Ensuring symmetry
@@ -121,25 +184,10 @@ def generate_random_inputs(n):
 
 if __name__ == "__main__":
 
-    distance_matrix, cost_array, node_count = nandini_parlor_attributes()
-    # solving and printing the problem
-    selected_median_indexes_greedy, cost_incurred_greedy = variantA_greedy(
-            distance_matrix,
-            cost_array, 
-            node_count
-            )
+    # Varying Input Size - Dies after 25 #
+    #for n in range(2,27,5):
+    #    compare_heuristics(generate_random_inputs(n))
 
-    distance_matrix, cost_array, node_count = nandini_parlor_attributes()
-    selected_median_indexes_enumerate, cost_incurred_enumerate= variantA_enumerate(
-            distance_matrix,
-            cost_array, 
-            node_count
-            )
-
-    # print the best medians (we must do list comprehension to get the actual nodes)
-    print('Greedy: ')
-    print(f"Best Medians: {selected_median_indexes_greedy}")
-    print(f"Cost: {cost_incurred_greedy}") # print the cost
-    print('\n\nEnumerate: ')
-    print(f"Best Medians: {selected_median_indexes_enumerate}")
-    print(f"Cost: {cost_incurred_enumerate}") # print the cost
+    # Real World Example #
+    d,c,n = nandini_parlor_attributes()
+    compare_heuristics(d,c,n)
