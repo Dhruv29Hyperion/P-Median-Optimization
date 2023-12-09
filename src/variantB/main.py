@@ -42,7 +42,7 @@ def variantB(distance_matrix, node_count: int, cost_array, production_array, dem
                             production_array,
                             demand_array
                         )
-
+            print(f'{p=},{selected_medians=},{total_cost=}')
             if total_cost < best_cost:
                 best_cost = total_cost
                 best_medians = selected_medians
@@ -89,10 +89,17 @@ if __name__ == '__main__':
     #W = np.array([20,10,15])
     #W = np.array([10,15,25,15])
 
-    node_count = 100
-    dist_mat,C,P,W = generate_random_inputs(node_count)
+    #node_count = 100
+    #dist_mat,C,P,W = generate_random_inputs(node_count)
 
-    selected_median_indexes, cost_incurred = variantB(dist_mat,node_count,C,P,W)
+    D = np.array([[0,5,10],[5,0,7],[10,7,0]])
+    C = np.array([1,2,1])
+    W = np.array([4,6,5])
+    P = np.array([1.5,2,1.7])
+
+    selected_median_indexes, cost_incurred = variantB(D,3,C,P,W)
+
+    #selected_median_indexes, cost_incurred = variantB(dist_mat,node_count,C,P,W)
 
     print(f"Best Medians: {selected_median_indexes}")
     print(f"Cost: {cost_incurred}")

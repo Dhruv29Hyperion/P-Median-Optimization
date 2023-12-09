@@ -95,12 +95,15 @@ def greedy_solver(distance_matrix,cost_array, node_count: int, p: int = 1) -> li
                 node_count, 
                 candidate_positions_for_medians
             )
+            #print(f'{candidate_positions_for_medians=},{cost=}')
 
             if cost < best_cost:
                 best_cost = cost
                 best_median_idx = node_idx
 
+        #print(f'{best_median_idxs=}')
         best_median_idxs.append(best_median_idx)
+        #print(f'{best_median_idxs=}')
 
         # delete the selected median from the candidate list
         remaining_point_idxs = np.delete(

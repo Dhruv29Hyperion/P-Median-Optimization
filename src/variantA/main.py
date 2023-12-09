@@ -82,6 +82,7 @@ def variantA_greedy(distance_matrix, cost_array, node_count: int) -> tuple[list[
                     node_count,
                     selected_medians
                     )
+            # print(f'{p=},{selected_medians=},{total_cost=}')
             # print(f"{total_cost=}")
             # print(f"{selected_medians=}")
             if total_cost < best_cost:
@@ -180,14 +181,19 @@ def generate_random_inputs(n):
 
     cost_matrix = np.random.rand(n)
     
-    return distance_matrix,cost_matrix
+    return distance_matrix,cost_matrix, n
 
 if __name__ == "__main__":
+    d = np.array([[0,5,10],[5,0,7],[10,7,0]])
+    c = np.array([5,7,5])
+    n = 3
+    compare_heuristics(d,c,n)
 
     # Varying Input Size - Dies after 25 #
-    #for n in range(2,27,5):
-    #    compare_heuristics(generate_random_inputs(n))
+    #for n in range(2,17,2):
+    #    d,c,n = generate_random_inputs(n)
+    #    compare_heuristics(d,c,n)
 
     # Real World Example #
-    d,c,n = nandini_parlor_attributes()
-    compare_heuristics(d,c,n)
+    #d,c,n = nandini_parlor_attributes()
+    #compare_heuristics(d,c,n)

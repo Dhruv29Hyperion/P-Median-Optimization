@@ -124,7 +124,7 @@ def compute_better_cost(distance_matrix, node_count, median_idxs, cost_array, pr
         for median in range(node_count):
             delivery_weight[node,median] =  (demand_array[node]/production_array[median])*cost_array[median]
 
-    weighted_distance_matrix = np.matmul(delivery_weight,distance_matrix)
+    weighted_distance_matrix = delivery_weight+distance_matrix
 
     # Generating X Matrix based on minimum distance
     X = np.zeros((node_count,node_count))
