@@ -121,16 +121,20 @@ if __name__ == "__main__":
     )
     cost_array = np.array([10, 10, 10, 10])
     node_count = 4
-    demand_array = np.array([10, 15, 25, 15])
-    production_array = np.array([5, 7, 6, 5])
+    # demand_array = np.array([10, 15, 25, 15])
+    # production_array = np.array([5, 7, 6, 5])
 
-    D = np.array([[0, 5, 10], [5, 0, 7], [10, 7, 0]])
-    C = np.array([1, 2, 1])
-    W = np.array([4, 6, 5])
-    P = np.array([1.5, 2, 1.7])
-    NC = 3
+    print(uncapacitated_problem(distance_matrix, cost_array, node_count, solver="vertex_substitution"))
+    print(uncapacitated_problem(distance_matrix, cost_array, node_count, solver="greedy"))
+    print(uncapacitated_problem(distance_matrix, cost_array, node_count, solver="enumeration"))
 
-    cost, selected_medians, p, no_ops = capacitated_problem(
-        D, C, NC, P, W, solver="greedy"
-    )
-    print(f"{cost=} {selected_medians=} {p=} {no_ops=}")
+    # D = np.array([[0, 5, 10], [5, 0, 7], [10, 7, 0]])
+    # C = np.array([1, 2, 1])
+    # W = np.array([4, 6, 5])
+    # P = np.array([1.5, 2, 1.7])
+    # NC = 3
+
+    # cost, selected_medians, p, no_ops = capacitated_problem(
+    #     D, C, NC, P, W, solver="greedy"
+    # )
+    # print(f"{cost=} {selected_medians=} {p=} {no_ops=}")

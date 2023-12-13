@@ -87,7 +87,6 @@ def greedy_solver(
 
 
 def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 1):
-
     H = np.diag(cost_array)
     V = np.arange(node_count)
     R = H @ D
@@ -96,8 +95,10 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 1):
 
     no_ops = 0
 
+    previous = 0
+    cost = 0
     while True:
-        V_cant_seen = set(V_cand)
+        # Inside a cycle
         partitions = []
 
         for jvertex in V_cand:
@@ -111,10 +112,67 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 1):
                 else:
                     part.append(ivertex)
             partitions.append(part)
-        
-        remaining_vbs = []
 
-    return None, 0
+        # ---- Vb repeat ---- #
+        seen = set(V_cand)
+        rem = set(V) - seen
+        vbidx = 0
+        while vbidx < len(rem):
+            SubR = R[:, V_cand]
+            Vb = rem.pop()
+            rem.add(Vb)  # temp, later removed!
+            deltabjs = []
+            for jvertexidx in np.arange(len(V_cand)):
+                # replace jvertex with Vb
+                V_cand_copy = V_cand.copy()
+                V_cand_copy[jvertexidx] = Vb
+
+                SubRreplaced = R[:, V_cand_copy]
+
+                i = 0
+                delta = 0
+                for ithrow in SubR:
+                    minimum = np.min(ithrow)
+                    if len(ithrow) != 1:
+                        second_minimum = np.sort(ithrow)[1]
+                    else:
+                        second_minimum = minimum
+                    rij = SubR[i, jvertexidx]
+                    delt = 0
+                    if minimum == rij:
+                        if R[i, Vb] <= rij:
+                            delt = R[i, Vb] - rij  # shold be negative
+                        elif rij <= R[i, Vb] and rij <= second_minimum:
+                            delt = R[i, Vb] - rij  # should be positive
+                        elif rij <= R[i, Vb] and second_minimum <= R[i, Vb]:
+                            delt = second_minimum - rij  # should be positive
+                    delta += delt
+                    i += 1
+
+            deltabjs.append(delta)
+            bjmin = np.min(deltabjs)
+            if bjmin < 0:
+                V_cand[np.argmin(deltabjs)] = Vb
+
+            seen.add(Vb)
+            rem = set(V) - seen
+            vbidx += 1
+        # ---- Vb repeat ---- #
+
+        # cost #
+        cost = 0
+        for j in np.arange(len(V_cand)):
+            for i in partitions[j]:
+                cost += R[i, V_cand[j]]
+
+        if cost == previous:
+            break
+        else:
+            previous = cost
+
+        no_ops += 1
+
+    return V_cand, no_ops
 
 
 def enumeration_solver(
