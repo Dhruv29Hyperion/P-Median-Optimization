@@ -1,5 +1,5 @@
 from solvers import *
-
+import copy
 
 def uncapacitated_problem(
     distance_matrix, cost_array, node_count, solver="greedy"
@@ -113,19 +113,47 @@ def real_world_input():
 if __name__ == "__main__":
     distance_matrix = np.array(
         [
-            [0, 5, 10],
-            [5, 0, 5],
-            [10, 5, 0],
+            [0, 5, 100, 4, 5],
+            [5, 0, 5, 5, 100],
+            [100, 5, 0, 5, 5],
+            [4, 5, 5, 0, 5],
+            [5, 100, 5, 5, 0],
         ]
     )
-    cost_array = np.array([15, 10, 10])
-    node_count = 3
+
+    cost_array = np.array([1, 1, 1, 1, 1])
+    node_count = 5
     # demand_array = np.array([10, 15, 25, 15])
     # production_array = np.array([5, 7, 6, 5])
+    # print(vertex_substitution_solver(distance_matrix, cost_array, node_count, 2))
 
-    print("Vertex Substition:", uncapacitated_problem(distance_matrix, cost_array, node_count, solver="vertex_substitution"))
-    print("Greedy:", uncapacitated_problem(distance_matrix, cost_array, node_count, solver="greedy"))
-    print("Enumeration:", uncapacitated_problem(distance_matrix, cost_array, node_count, solver="enumeration"))
+    # median, _ = vertex_substitution_solver(distance_matrix, cost_array, node_count, 2)
+    # print(median)
+    # print(cost_of_configuration(distance_matrix, cost_array, node_count, median))  
+
+    # median, _ = greedy_solver(distance_matrix, cost_array, node_count, 2)
+    # print(median)
+    # print(cost_of_configuration(distance_matrix, cost_array, node_count, median))  
+    D, C, n = real_world_input()
+    Di, Ci, ni = copy.deepcopy(D), copy.deepcopy(C), copy.deepcopy(n)
+    print(
+        "Vertex Substition:",
+        uncapacitated_problem(
+            Di, Ci, ni, solver="vertex_substitution"
+        ),
+    )
+    Di, Ci, ni = copy.deepcopy(D), copy.deepcopy(C), copy.deepcopy(n)
+    print(
+        "Greedy:",
+        uncapacitated_problem(Di, Ci, ni, solver="greedy"),
+    )
+    Di, Ci, ni = copy.deepcopy(D), copy.deepcopy(C), copy.deepcopy(n)
+    print(
+        "Enumeration:",
+        uncapacitated_problem(
+            Di, Ci, ni, solver="enumeration"
+        ),
+    )
 
     # D = np.array([[0, 5, 10], [5, 0, 7], [10, 7, 0]])
     # C = np.array([1, 2, 1])

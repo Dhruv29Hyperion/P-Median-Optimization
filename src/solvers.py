@@ -87,13 +87,19 @@ def greedy_solver(
 
 
 def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 2):
-    H = np.diag(cost_array)
     V = np.arange(node_count)
-    R = H @ D
+    R = np.zeros((node_count, node_count))
+    i = 0
+    # for cost in cost_array:
+    for j in V:
+        R[:, j] = cost_array[j] * D[:, j]
+        # i += 1
+
+    # print(R)
 
     V_cand = np.copy(V[:p])
 
-    no_ops = 0
+    no_ops = 1
 
     previous = 0
     cost = 0
@@ -119,6 +125,8 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 2):
         vbidx = 0
         while vbidx < len(rem):
             SubR = R[:, V_cand]
+            # print(V_cand)
+            # print(SubR)
 
             Vb = rem.pop()
             rem.add(Vb)  # temp, later removed!
@@ -127,7 +135,7 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 2):
                 # replace jvertex with Vb
                 V_cand_copy = V_cand.copy()
                 V_cand_copy[jvertexidx] = Vb
-
+                # print(f"Trying {V_cand_copy}")
                 i = 0
                 delta = 0
                 for ithrow in SubR:
@@ -138,14 +146,17 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 2):
                     if minimum == rij:
                         if R[i, Vb] <= rij:
                             delt = R[i, Vb] - rij  # shold be negative
-                        elif rij <= R[i, Vb] and rij <= second_minimum:
+                            # print(f"delt: {delt}")
+                        elif rij <= R[i, Vb] and R[i, Vb] <= second_minimum:
                             delt = R[i, Vb] - rij  # should be positive
                         elif rij <= R[i, Vb] and second_minimum <= R[i, Vb]:
                             delt = second_minimum - rij  # should be positive
+                    # print(f"{delta=} {delt=}")
                     delta += delt
                     i += 1
+                deltabjs.append(delta)
 
-            deltabjs.append(delta)
+            # print("deltas:", deltabjs)
             bjmin = np.min(deltabjs)
             if bjmin < 0:
                 V_cand[np.argmin(deltabjs)] = Vb
@@ -167,7 +178,7 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 2):
             previous = cost
         if no_ops > 10000:
             break
-        
+
         no_ops += 1
 
     return V_cand, no_ops

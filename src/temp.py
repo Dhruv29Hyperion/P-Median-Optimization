@@ -175,7 +175,7 @@ if __name__ == "__main__":
     # print("\n\n\n")
     # plotter(N, TIME_greedy, TIME_tb, TIME_es)
     # plot_bar(*visualize_each_p())
-    visualize_each_n(p=10)
+    visualize_each_n(p=17)
 
 
 
