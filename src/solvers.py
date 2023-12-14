@@ -86,7 +86,7 @@ def greedy_solver(
     return best_median_idxs, no_ops
 
 
-def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 1):
+def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 2):
     H = np.diag(cost_array)
     V = np.arange(node_count)
     R = H @ D
@@ -119,6 +119,7 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 1):
         vbidx = 0
         while vbidx < len(rem):
             SubR = R[:, V_cand]
+
             Vb = rem.pop()
             rem.add(Vb)  # temp, later removed!
             deltabjs = []
@@ -127,16 +128,11 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 1):
                 V_cand_copy = V_cand.copy()
                 V_cand_copy[jvertexidx] = Vb
 
-                SubRreplaced = R[:, V_cand_copy]
-
                 i = 0
                 delta = 0
                 for ithrow in SubR:
                     minimum = np.min(ithrow)
-                    if len(ithrow) != 1:
-                        second_minimum = np.sort(ithrow)[1]
-                    else:
-                        second_minimum = minimum
+                    second_minimum = np.sort(ithrow)[1]
                     rij = SubR[i, jvertexidx]
                     delt = 0
                     if minimum == rij:
@@ -169,7 +165,9 @@ def vertex_substitution_solver(D, cost_array, node_count: int, p: int = 1):
             break
         else:
             previous = cost
-
+        if no_ops > 10000:
+            break
+        
         no_ops += 1
 
     return V_cand, no_ops

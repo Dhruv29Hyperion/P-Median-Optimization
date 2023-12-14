@@ -66,7 +66,7 @@ def comparator(N):
 
 
 if __name__ == "__main__":
-    N = 5
+    N = 15
     TIME_greedy, TIME_tb, TIME_es = comparator(N)
     print("\n\n\n")
     print(f"{TIME_tb=}\n\n{TIME_es=}\n\n{TIME_greedy=}\n")
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 # 1. time taken for each p, averaged over multiple runs {Fixed N=10} -> Line graph {generic showcase of which is better}
 # 2. time taken for whole "solution", averaged over multiple runs {Fixed N=10} -> Bar graph
 # 3. time taken for different Ns (N=3, p=2 to N=20, p=2) {Fixed p} -> Line graph
-#
+# 4. accuracy for whole "solution", compared to enumeration {Fixed N=10} -> if p value =, then line graph
 
 # Graph representation of the problem
 # Graph representation of the problem with selected medians circled

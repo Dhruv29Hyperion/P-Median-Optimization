@@ -9,7 +9,7 @@ def uncapacitated_problem(
     best_p = 0
     opcount = 0
 
-    for p in range(1, node_count + 1):
+    for p in range(2, node_count + 1):
         if solver == "greedy":
             selected_medians, no_ops = greedy_solver(
                 distance_matrix, cost_array, node_count, p
@@ -113,20 +113,19 @@ def real_world_input():
 if __name__ == "__main__":
     distance_matrix = np.array(
         [
-            [0, 5, 10, 15],
-            [5, 0, 5, 10],
-            [10, 5, 0, 5],
-            [15, 10, 5, 0],
+            [0, 5, 10],
+            [5, 0, 5],
+            [10, 5, 0],
         ]
     )
-    cost_array = np.array([10, 10, 10, 10])
-    node_count = 4
+    cost_array = np.array([15, 10, 10])
+    node_count = 3
     # demand_array = np.array([10, 15, 25, 15])
     # production_array = np.array([5, 7, 6, 5])
 
-    print(uncapacitated_problem(distance_matrix, cost_array, node_count, solver="vertex_substitution"))
-    print(uncapacitated_problem(distance_matrix, cost_array, node_count, solver="greedy"))
-    print(uncapacitated_problem(distance_matrix, cost_array, node_count, solver="enumeration"))
+    print("Vertex Substition:", uncapacitated_problem(distance_matrix, cost_array, node_count, solver="vertex_substitution"))
+    print("Greedy:", uncapacitated_problem(distance_matrix, cost_array, node_count, solver="greedy"))
+    print("Enumeration:", uncapacitated_problem(distance_matrix, cost_array, node_count, solver="enumeration"))
 
     # D = np.array([[0, 5, 10], [5, 0, 7], [10, 7, 0]])
     # C = np.array([1, 2, 1])
