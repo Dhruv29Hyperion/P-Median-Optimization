@@ -162,16 +162,5 @@ cython_debug/
 .DS_Store
 IMPORTANCE.txt
 
-doc/_minted*
-doc/*.aux
-doc/*.log
-doc/*.out
-doc/*.toc
-doc/*.bbl
-doc/*.blg
-doc/*.fdb_latexmk
-doc/*.fls
-doc/*.synctex.gz
-doc/*.synctex.gz\(busy\)
-doc/*.synctex.gz\(busy\)_*
+doc/**
 
